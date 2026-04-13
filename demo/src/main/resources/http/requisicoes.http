@@ -1,7 +1,7 @@
-# Listar todas as empresas
+### Listar todas as empresas
 GET http://localhost:8080/empresas
 
-# Criar uma nova empresa
+### Criar uma nova empresa
 POST http://localhost:8080/empresas
 Content-Type: application/json
 
@@ -12,7 +12,7 @@ Content-Type: application/json
   "emailContato": "tech@zeta.com"
 }
 
-# Atualizar uma empresa existente
+### Atualizar uma empresa existente
 PUT http://localhost:8080/empresas/1
 Content-Type: application/json
 
@@ -22,13 +22,13 @@ Content-Type: application/json
   "emailContato": "novo-contato@alfa.com"
 }
 
-# Deletar uma empresa
+### Deletar uma empresa
 DELETE http://localhost:8080/empresas/5
 
-# Listar todos os estudantes
+### Listar todos os estudantes
 GET http://localhost:8080/estudantes
 
-# Criar um novo estudante
+### Criar um novo estudante
 POST http://localhost:8080/estudantes
 Content-Type: application/json
 
@@ -40,13 +40,13 @@ Content-Type: application/json
   "anoIngresso": 2024
 }
 
-# Deletar um estudante
+### Deletar um estudante
 DELETE http://localhost:8080/estudantes/10
 
-# Listar todas as vagas
+### Listar todas as vagas
 GET http://localhost:8080/vagas
 
-# Criar uma nova vaga
+### Criar uma nova vaga
 POST http://localhost:8080/vagas
 Content-Type: application/json
 
@@ -58,3 +58,6 @@ Content-Type: application/json
   "ativo": true,
   "idEmpresa": 1
 }
+
+### Deletar uma vaga pelo ID
+DELETE http://localhost:8080/vagas/3
