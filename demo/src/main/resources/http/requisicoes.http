@@ -6,7 +6,6 @@ POST http://localhost:8080/empresas
 Content-Type: application/json
 
 {
-  "id": 6,
   "nome": "Zeta Tech Mackenzie",
   "cnpj": "44.555.666/0001-77",
   "emailContato": "tech@zeta.com"

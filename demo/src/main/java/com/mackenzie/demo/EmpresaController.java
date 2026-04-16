@@ -1,56 +1,51 @@
 package com.mackenzie.demo;
 
+import java.lang.foreign.Linker.Option;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/empresas")
 public class EmpresaController {
-    private static List<Empresa> empresas = new ArrayList<>();
-
-    static {
-        empresas.add(new Empresa(1L, "Empresa Alfa LTDA", "12.345.678/0001-90", "contato@empresa-alfa.com"));
-        empresas.add(new Empresa(2L, "Beta Comércio ME", "98.765.432/0001-10", "beta@comercio.com"));
-        empresas.add(new Empresa(3L, "Gamma Serviços S.A.", "11.222.333/0001-44", "servicos@gamma.com"));
-        empresas.add(new Empresa(4L, "Delta Engenharia", "22.333.444/0001-55", "contato@deltaeng.com"));
-        empresas.add(new Empresa(5L, "Epsilon Digital", "33.444.555/0001-66", "email@epsilondigital.com"));
-    }
+    @Autowired
+    EmpresaRepository empresaRepository;
 
     @GetMapping
-    public List<Empresa> listar() { return empresas; }
+    public Iterable<EmpresaModel> listar() { return empresaRepository.findAll(); }
 
     @PostMapping
-    public Empresa criar(@RequestBody Empresa empresa) {
-        empresas.add(empresa);
-        return empresa;
+    public EmpresaModel criar(@RequestBody EmpresaModel empresa) {
+        return empresaRepository.save(empresa);
     }
 
     @PutMapping("/{id}")
-    public Empresa atualizar(@PathVariable Long id, @RequestBody Empresa atualizado) {
-        for (Empresa e : empresas) {
-            if (e.getId().equals(id)) {
-                e.setNome(atualizado.getNome());
-                e.setCnpj(atualizado.getCnpj());
-                e.setEmailContato(atualizado.getEmailContato());
-                return e;
-            }
+    public EmpresaModel atualizar(@PathVariable Long id, @RequestBody EmpresaModel atualizado) {
+        Optional<EmpresaModel> empresaEncontrada = empresaRepository.findById(id);
+        if (empresaEncontrada.isPresent()) {
+            EmpresaModel empresa = empresaEncontrada.get();
+            empresa.setNome(atualizado.getNome());
+            empresa.setCnpj(atualizado.getCnpj());
+            empresa.setEmailContato(atualizado.getEmailContato());
+            return empresaRepository.save(empresa);
+        } else {
+            return null;
         }
-        return null;
     }
 
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
-        Empresa empresaEncontrada = null;
-        for (Empresa e : empresas) {
+        EmpresaModel empresaEncontrada = null;
+        for (EmpresaModel e : empresaRepository.findAll()) {
             if (e.getId().equals(id)) {
                 empresaEncontrada = e;
-                break; // Para o loop assim que encontrar
+                break; 
             }
         }
         
         if (empresaEncontrada != null) {
-            empresas.remove(empresaEncontrada);
+            empresaRepository.delete(empresaEncontrada);
         }
     }
 }
