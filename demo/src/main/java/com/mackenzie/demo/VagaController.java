@@ -1,59 +1,35 @@
 package com.mackenzie.demo;
-
-import com.mackenzie.demo.Vaga;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/vagas")
 public class VagaController {
-    private static List<Vaga> vagas = new ArrayList<>();
-
-    static {
-        vagas.add(new Vaga(1L, "Desenvolvedor Java", "Atuação em projetos backend...", "2025-10-01", true, 1L));
-        vagas.add(new Vaga(2L, "Analista de Suporte Técnico", "Suporte a clientes...", "2025-09-27", true, 2L));
-        vagas.add(new Vaga(3L, "Engenheiro de Software", "Desenvolvimento de sistemas...", "2025-10-03", false, 3L));
-        vagas.add(new Vaga(4L, "Analista de Dados", "Conhecimentos de SQL e Python...", "2025-09-18", true, 4L));
-        vagas.add(new Vaga(5L, "Designer Digital", "UX/UI e marketing...", "2025-09-30", false, 5L));
-        vagas.add(new Vaga(6L, "Consultor de Projetos", "Treinamentos empresariais...", "2025-10-06", true, 1L));
-        vagas.add(new Vaga(7L, "Programador Full Stack", "Frontend e backend...", "2025-10-04", true, 2L));
-    }
+    @Autowired
+    VagaRepository vagaRepository;
 
     @GetMapping
-    public List<Vaga> listar() { return vagas; }
+    public Iterable<VagaModel> listar() { return vagaRepository.findAll(); }
 
     @PostMapping
-    public Vaga criar(@RequestBody Vaga vaga) {
-        vagas.add(vaga);
-        return vaga;
+    public VagaModel criar(@RequestBody VagaModel vaga) {
+        return vagaRepository.save(vaga);
     }
 
     @PutMapping("/{id}")
-    public Vaga atualizar(@PathVariable Long id, @RequestBody Vaga atualizado) {
-        for (Vaga v : vagas) {
-            if (v.getId().equals(id)) {
-                v.setTitulo(atualizado.getTitulo());
-                v.setDescricao(atualizado.getDescricao());
-                v.setAtivo(atualizado.getAtivo());
-                return v;
-            }
-        }
-        return null;
+    public VagaModel atualizar(@PathVariable Long id, @RequestBody VagaModel atualizado) {
+        Optional<VagaModel> vagaEncontrada = vagaRepository.findById(id);
+        if(vagaEncontrada.isEmpty()) return null;
+        VagaModel v = vagaEncontrada.get();
+        v.setTitulo(atualizado.getTitulo());
+        v.setDescricao(atualizado.getDescricao());
+        v.setAtivo(atualizado.getAtivo());
+        return vagaRepository.save(v);
     }
 
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
-        Vaga vagaEncontrada = null;
-        for (Vaga v : vagas) {
-            if (v.getId().equals(id)) {
-                vagaEncontrada = v;
-                break;
-            }
-        }
-
-        if (vagaEncontrada != null) {
-            vagas.remove(vagaEncontrada);
-        }
+        vagaRepository.deleteById(id);
     }
 }

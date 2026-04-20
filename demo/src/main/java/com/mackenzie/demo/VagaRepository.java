@@ -1,24 +1,8 @@
 package com.mackenzie.demo;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-@Entity
-@Table(name = "vaga")
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-public class VagaRepository {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String titulo;
-    private String descricao;
-    private String publicacao;
-    private Boolean ativo;
-    private Long idEmpresa;
+@Repository
+public interface VagaRepository extends JpaRepository<VagaModel, Long>{
 }
